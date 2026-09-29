@@ -15,7 +15,7 @@ public class TaskService {
     }
 
     public Task createTask(CreateTaskRequest taskRequest) {
-        if (taskRequest.title() == null) {
+        if (taskRequest.title() == null || taskRequest.title().isEmpty()) {
             throw new IllegalArgumentException();
         }
 
