@@ -13,9 +13,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class TaskServiceTest {
@@ -51,5 +51,17 @@ class TaskServiceTest {
         // any(Task.class) indica che accettiamo qualsiasi oggetto di tipo Task come argomento.
         verify(taskRepository, times(1)).save(any(Task.class));
 
+    }
+
+    @Test
+    void failCreateTask_whenTitleIsNull_shouldThrowException() {
+        LocalDate dueDate = LocalDate.now();
+
+        CreateTaskRequest ctr = new CreateTaskRequest(null,
+                "Descrizione",
+                dueDate);
+
+        assertThrows(IllegalArgumentException.class, () -> taskService.createTask(ctr));
+        verify(taskRepository, never()).save(any(Task.class));
     }
 }
