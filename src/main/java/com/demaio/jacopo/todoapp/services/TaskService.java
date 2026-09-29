@@ -3,9 +3,11 @@ package com.demaio.jacopo.todoapp.services;
 import com.demaio.jacopo.todoapp.dtos.CreateTaskRequest;
 import com.demaio.jacopo.todoapp.model.entities.Task;
 import com.demaio.jacopo.todoapp.repositories.TaskRepository;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 
+@Service
 public class TaskService {
 
     private TaskRepository taskRepository;
@@ -15,7 +17,7 @@ public class TaskService {
     }
 
     public Task createTask(CreateTaskRequest taskRequest) {
-        if (taskRequest.title() == null || taskRequest.title().isEmpty()) {
+        if (taskRequest.title() == null || taskRequest.title().isEmpty() || taskRequest.title().isBlank()) {
             throw new IllegalArgumentException();
         }
 
