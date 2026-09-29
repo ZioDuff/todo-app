@@ -64,4 +64,16 @@ class TaskServiceTest {
         assertThrows(IllegalArgumentException.class, () -> taskService.createTask(ctr));
         verify(taskRepository, never()).save(any(Task.class));
     }
+
+    @Test
+    void failCreateTask_whenDueDateIsOlderThanSevenDays_shouldThrowException() {
+        LocalDate dueDate = LocalDate.now().minusDays(8);
+
+        CreateTaskRequest ctr = new CreateTaskRequest("Test",
+                "Descrizione",
+                dueDate);
+
+        assertThrows(IllegalArgumentException.class, () -> taskService.createTask(ctr));
+        verify(taskRepository, never()).save(any(Task.class));
+    }
 }
