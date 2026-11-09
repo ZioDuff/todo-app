@@ -1,6 +1,7 @@
 package com.demaio.jacopo.todoapp.controllers;
 
 import com.demaio.jacopo.todoapp.dtos.CreateTaskRequest;
+import com.demaio.jacopo.todoapp.dtos.UpdateTaskRequest;
 import com.demaio.jacopo.todoapp.model.entities.Task;
 import com.demaio.jacopo.todoapp.services.TaskService;
 import jakarta.validation.Valid;
@@ -34,5 +35,11 @@ public class TaskController {
     public ResponseEntity<List<Task>> getAllTasks() {
         List<Task> tasks = taskService.findAllTasks();
         return ResponseEntity.ok(tasks);
+    }
+
+    @PatchMapping("/{id}/details")
+    public ResponseEntity<Task> updateTaskDetails(@PathVariable long id, @Valid @RequestBody UpdateTaskRequest updateTaskRequest) {
+        Task task = taskService.updateTaskDetailsById(id, updateTaskRequest);
+        return ResponseEntity.ok(task);
     }
 }

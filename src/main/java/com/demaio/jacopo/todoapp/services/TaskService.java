@@ -1,6 +1,7 @@
 package com.demaio.jacopo.todoapp.services;
 
 import com.demaio.jacopo.todoapp.dtos.CreateTaskRequest;
+import com.demaio.jacopo.todoapp.dtos.UpdateTaskRequest;
 import com.demaio.jacopo.todoapp.exceptions.TaskNotFoundException;
 import com.demaio.jacopo.todoapp.model.entities.Task;
 import com.demaio.jacopo.todoapp.repositories.TaskRepository;
@@ -44,5 +45,32 @@ public class TaskService {
 
     public List<Task> findAllTasks() {
         return taskRepository.findAll();
+    }
+
+    public Task updateTaskDetailsById(Long id, UpdateTaskRequest updateTaskRequest) {
+        Task task = findTaskById(id);
+        if (updateTaskRequest.title() == null || updateTaskRequest.title().isBlank()) {
+            throw new IllegalArgumentException();
+        }
+        task.setTitle(updateTaskRequest.title());
+
+        if (updateTaskRequest.description() != null && !updateTaskRequest.description().isBlank()) {
+            if (updateTaskRequest.description().length() > 255) {
+                throw new IllegalArgumentException();
+            }
+            task.setDescription(updateTaskRequest.description());
+        }
+
+
+        if (updateTaskRequest.dueDate() != null) {
+            if (updateTaskRequest.dueDate().isBefore(LocalDate.now().minusDays(7))) {
+                throw new IllegalArgumentException();
+            } else {
+                task.setDueDate(updateTaskRequest.dueDate());
+            }
+        }
+
+
+        return taskRepository.save(task);
     }
 }
