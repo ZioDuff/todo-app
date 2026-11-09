@@ -7,6 +7,8 @@ import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/tasks")
 public class TaskController {
@@ -26,5 +28,11 @@ public class TaskController {
     @PostMapping
     public Task createTask(@Valid @RequestBody CreateTaskRequest createTaskRequest) {
         return this.taskService.createTask(createTaskRequest);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<Task>> getAllTasks() {
+        List<Task> tasks = taskService.findAllTasks();
+        return ResponseEntity.ok(tasks);
     }
 }
