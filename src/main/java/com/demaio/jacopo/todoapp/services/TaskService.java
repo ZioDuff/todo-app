@@ -1,6 +1,7 @@
 package com.demaio.jacopo.todoapp.services;
 
 import com.demaio.jacopo.todoapp.dtos.CreateTaskRequest;
+import com.demaio.jacopo.todoapp.dtos.UpdateStatusRequest;
 import com.demaio.jacopo.todoapp.dtos.UpdateTaskRequest;
 import com.demaio.jacopo.todoapp.exceptions.TaskNotFoundException;
 import com.demaio.jacopo.todoapp.model.entities.Task;
@@ -72,5 +73,21 @@ public class TaskService {
 
 
         return taskRepository.save(task);
+    }
+
+    public Task updateTaskStatus(long id, UpdateStatusRequest updateStatusRequest) {
+        Task task = findTaskById(id);
+
+        if (updateStatusRequest.status() == null) {
+            throw new IllegalArgumentException();
+        }
+
+        task.setStatus(updateStatusRequest.status());
+        return taskRepository.save(task);
+    }
+
+    public void deleteTaskById(long id) {
+        Task task = findTaskById(id);
+        taskRepository.deleteById(task.getId());
     }
 }
