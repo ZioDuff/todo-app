@@ -1,6 +1,7 @@
 package com.demaio.jacopo.todoapp.services;
 
 import com.demaio.jacopo.todoapp.dtos.CreateTaskRequest;
+import com.demaio.jacopo.todoapp.exceptions.InvalidTaskDataException;
 import com.demaio.jacopo.todoapp.model.entities.Status;
 import com.demaio.jacopo.todoapp.model.entities.Task;
 import com.demaio.jacopo.todoapp.repositories.TaskRepository;
@@ -61,7 +62,7 @@ class TaskServiceTest {
                 "Descrizione",
                 dueDate);
 
-        assertThrows(IllegalArgumentException.class, () -> taskService.createTask(ctr));
+        assertThrows(InvalidTaskDataException.class, () -> taskService.createTask(ctr));
         verify(taskRepository, never()).save(any(Task.class));
     }
 
@@ -73,7 +74,7 @@ class TaskServiceTest {
                 "Descrizione",
                 dueDate);
 
-        assertThrows(IllegalArgumentException.class, () -> taskService.createTask(ctr));
+        assertThrows(InvalidTaskDataException.class, () -> taskService.createTask(ctr));
         verify(taskRepository, never()).save(any(Task.class));
     }
 }

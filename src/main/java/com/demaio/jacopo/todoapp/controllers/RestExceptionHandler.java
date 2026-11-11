@@ -1,6 +1,7 @@
 package com.demaio.jacopo.todoapp.controllers;
 
 import com.demaio.jacopo.todoapp.dtos.ErrorResponse;
+import com.demaio.jacopo.todoapp.exceptions.InvalidTaskDataException;
 import com.demaio.jacopo.todoapp.exceptions.TaskNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,5 +15,11 @@ public class RestExceptionHandler {
     public ResponseEntity<ErrorResponse> handleTaskNotFoundException(TaskNotFoundException ex) {
         ErrorResponse errorResponse = new ErrorResponse(ex.getErrorCode(), ex.getMessage());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+    }
+
+    @ExceptionHandler(InvalidTaskDataException.class)
+    public ResponseEntity<ErrorResponse> handleInvalidTaskDataException(InvalidTaskDataException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(ex.getErrorCode(), ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
     }
 }

@@ -3,6 +3,7 @@ package com.demaio.jacopo.todoapp.services;
 import com.demaio.jacopo.todoapp.dtos.CreateTaskRequest;
 import com.demaio.jacopo.todoapp.dtos.UpdateStatusRequest;
 import com.demaio.jacopo.todoapp.dtos.UpdateTaskRequest;
+import com.demaio.jacopo.todoapp.exceptions.InvalidTaskDataException;
 import com.demaio.jacopo.todoapp.exceptions.TaskNotFoundException;
 import com.demaio.jacopo.todoapp.model.entities.Task;
 import com.demaio.jacopo.todoapp.repositories.TaskRepository;
@@ -22,11 +23,11 @@ public class TaskService {
 
     public Task createTask(CreateTaskRequest taskRequest) {
         if (taskRequest.title() == null || taskRequest.title().isBlank()) {
-            throw new IllegalArgumentException();
+            throw new InvalidTaskDataException("INVALID_TASK_DATA", "Title is required");
         }
 
         if (taskRequest.dueDate() != null && taskRequest.dueDate().isBefore(LocalDate.now().minusDays(7))) {
-            throw new IllegalArgumentException();
+            throw new InvalidTaskDataException("INVALID_TASK_DATA", "Due date cannot be more than seven days in the past");
         }
 
         Task task = new Task(
@@ -51,13 +52,13 @@ public class TaskService {
     public Task updateTaskDetailsById(Long id, UpdateTaskRequest updateTaskRequest) {
         Task task = findTaskById(id);
         if (updateTaskRequest.title() == null || updateTaskRequest.title().isBlank()) {
-            throw new IllegalArgumentException();
+            throw new InvalidTaskDataException("INVALID_TASK_DATA", "Title is required");
         }
         task.setTitle(updateTaskRequest.title());
 
         if (updateTaskRequest.description() != null && !updateTaskRequest.description().isBlank()) {
             if (updateTaskRequest.description().length() > 255) {
-                throw new IllegalArgumentException();
+                throw new InvalidTaskDataException("INVALID_TASK_DATA", "Description cannot exceed 255 characters");
             }
             task.setDescription(updateTaskRequest.description());
         }
@@ -65,7 +66,7 @@ public class TaskService {
 
         if (updateTaskRequest.dueDate() != null) {
             if (updateTaskRequest.dueDate().isBefore(LocalDate.now().minusDays(7))) {
-                throw new IllegalArgumentException();
+                throw new InvalidTaskDataException("INVALID_TASK_DATA", "Due date cannot be more than seven days in the past");
             } else {
                 task.setDueDate(updateTaskRequest.dueDate());
             }
@@ -79,7 +80,7 @@ public class TaskService {
         Task task = findTaskById(id);
 
         if (updateStatusRequest.status() == null) {
-            throw new IllegalArgumentException();
+            throw new InvalidTaskDataException("INVALID_TASK_DATA", "Status is required");
         }
 
         task.setStatus(updateStatusRequest.status());
