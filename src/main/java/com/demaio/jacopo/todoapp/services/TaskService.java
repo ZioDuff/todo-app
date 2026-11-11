@@ -54,13 +54,15 @@ public class TaskService {
         if (updateTaskRequest.title() == null || updateTaskRequest.title().isBlank()) {
             throw new InvalidTaskDataException("INVALID_TASK_DATA", "Title is required");
         }
-        task.setTitle(updateTaskRequest.title());
 
-        if (updateTaskRequest.description() != null && !updateTaskRequest.description().isBlank()) {
+        String description = updateTaskRequest.description();
+        boolean shouldUpdateDescription =
+                description != null && !description.isBlank();
+
+        if (shouldUpdateDescription) {
             if (updateTaskRequest.description().length() > 255) {
                 throw new InvalidTaskDataException("INVALID_TASK_DATA", "Description cannot exceed 255 characters");
             }
-            task.setDescription(updateTaskRequest.description());
         }
 
 
@@ -72,6 +74,10 @@ public class TaskService {
             }
         }
 
+        task.setTitle(updateTaskRequest.title());
+        if (shouldUpdateDescription) {
+            task.setDescription(updateTaskRequest.description());
+        }
 
         return taskRepository.save(task);
     }
